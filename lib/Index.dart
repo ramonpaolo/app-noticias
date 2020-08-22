@@ -40,12 +40,6 @@ class _IndexState extends State<Index> {
     print("Carregando");
   }
 
-  String titulo = "texte",
-      texto = "tex",
-      descricao = "desci",
-      imagem = "a",
-      autor = "r";
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

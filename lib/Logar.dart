@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import './Index.dart';
 import 'dart:async';
 import './Registrar.dart';
@@ -11,6 +12,8 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage> {
   String email, password;
+  PlatformException error;
+  final _globalKey = GlobalKey<ScaffoldState>();
 
   void login() async {
     try {
@@ -20,13 +23,15 @@ class _RegisterPageState extends State<RegisterPage> {
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => Index()));
     } catch (e) {
-      print(e);
+      error = e;
+      print(error.code);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        key: _globalKey,
         body: Padding(
             padding: EdgeInsets.all(15.0),
             child: Column(
@@ -59,6 +64,17 @@ class _RegisterPageState extends State<RegisterPage> {
                 RaisedButton(
                   onPressed: () {
                     login();
+                    if (error.code == "ERROR_INVALID_EMAIL") {
+                      _globalKey.currentState.showSnackBar(SnackBar(
+                        content: Text("Email ou senha errado"),
+                        duration: Duration(seconds: 5),
+                      ));
+                    } else if (error.code == "ERROR_WRONG_PASSWORD") {
+                      _globalKey.currentState.showSnackBar(SnackBar(
+                        content: Text("Email ou senha errado"),
+                        duration: Duration(seconds: 5),
+                      ));
+                    }
                   },
                   child: Text(
                     "Logar",
